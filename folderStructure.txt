@@ -1,0 +1,10 @@
+
+src / components
+src / constants
+src / context
+src / helpers
+src / hooks
+src / pages
+src / lib (firebase is going to live here)
+src / services(firebase functions here)
+src / styles (talwind's folder (app/tailwind))

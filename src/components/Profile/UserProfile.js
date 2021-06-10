@@ -1,10 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import HeaderProfile from './HeaderProfile';
 import PropTypes from 'prop-types';
-import {
-  getUserByUsername,
-  getUserPhotosByUsername,
-} from '../../services/firebase';
+import { getUserPhotosByUsername } from '../../services/firebase';
 import PhotosProfile from './PhotosProfile';
 
 const UserProfile = ({ user }) => {

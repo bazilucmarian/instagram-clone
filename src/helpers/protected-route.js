@@ -20,3 +20,7 @@ export default function ProtectedRoute({ user, children, ...rest }) {
     />
   );
 }
+ProtectedRoute.propTypes = {
+  user: PropTypes.object,
+  children: PropTypes.object,
+};

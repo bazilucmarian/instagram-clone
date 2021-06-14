@@ -9,7 +9,7 @@ import {
   updateCollectionWithNewUser,
 } from '../services/firebase';
 
-const LoginPage = () => {
+const SignupPage = () => {
   const { inputs, handleChange, resetForm } = useForm({
     username: '',
     fullname: '',
@@ -31,7 +31,7 @@ const LoginPage = () => {
     e.preventDefault();
     const usernameExists = await doesUsernameExist(username);
 
-    if (!usernameExists.length) {
+    if (!usernameExists) {
       try {
         const createdUserResult = await createUser({ emailAddress, password });
         await createdUserResult.user.updateProfile({ displayName: username });
@@ -50,6 +50,7 @@ const LoginPage = () => {
         setError(error.message);
       }
     } else {
+      resetForm();
       setError('This username is already taken, please try another ! 🙂');
     }
   };
@@ -90,7 +91,7 @@ const LoginPage = () => {
                 autoComplete="fullname"
                 name="fullname"
                 type="text"
-                placeholder="Email your fullname"
+                placeholder="Full name"
                 className="text-sm text-gray-base w-full mr-3 py-5 px-5 h-2 border border-gray-primary rounded mb-2"
                 onChange={handleChange}
                 value={fullname || ''}
@@ -140,4 +141,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignupPage;

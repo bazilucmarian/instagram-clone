@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { ReactLoader } from './components/Loader';
 import * as ROUTES from './constants/routes';
 import { useUser } from './hooks/useUser';
 import UserContext from './context/userContext';
@@ -19,7 +20,7 @@ const App = () => {
   return (
     <UserContext.Provider value={{ user }}>
       <Router>
-        <Suspense fallback={<p>Loading ... </p>}>
+        <Suspense fallback={<ReactLoader />}>
           <Switch>
             <ProtectedRoute user={user} path={ROUTES.MAIN_PAGE} exact>
               <HomePage />
@@ -28,7 +29,7 @@ const App = () => {
             <IsUserLoggedIn
               user={user}
               path={ROUTES.LOGIN}
-              loggedInPath={ROUTES.MAIN_PAGE}
+              redirectPath={ROUTES.MAIN_PAGE}
               exact
             >
               <LoginPage />
@@ -36,13 +37,12 @@ const App = () => {
             <IsUserLoggedIn
               user={user}
               path={ROUTES.SIGN_UP}
-              loggedInPath={ROUTES.MAIN_PAGE}
+              redirectPath={ROUTES.MAIN_PAGE}
               exact
             >
               <SignUpPage />
             </IsUserLoggedIn>
-            <Route path={ROUTES.SIGN_UP} component={SignUpPage} exact />
-            <Route path={ROUTES.PROFILE} component={ProfilePage} exact />
+            <Route path={ROUTES.PROFILE} component={ProfilePage} />
             <Route component={NotFoundPage} />
           </Switch>
         </Suspense>

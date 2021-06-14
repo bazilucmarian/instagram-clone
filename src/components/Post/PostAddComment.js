@@ -28,7 +28,7 @@ const PostAddComment = ({ docId, comments, setComments, commentInput }) => {
     <div className="border-t border-gray-primary">
       <form
         className="flex justify-between pl-0 pr-5"
-        // onSubmit={handleSubmitComment}
+        onSubmit={handleSubmitComment}
         method="POST"
       >
         <input

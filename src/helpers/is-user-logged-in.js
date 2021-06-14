@@ -3,18 +3,17 @@ import PropTypes from 'prop-types';
 
 export default function IsUserLoggedIn({
   user,
-  loggedInPath,
+  redirectPath,
   children,
   ...rest
 }) {
-  console.log(loggedInPath);
   return (
     <Route
       {...rest}
       render={({ location }) => {
         if (!user) return children;
         if (user) {
-          return <Redirect to={{ pathname: loggedInPath }} />;
+          return <Redirect to={{ pathname: redirectPath }} />;
         }
         return null;
       }}
@@ -24,6 +23,6 @@ export default function IsUserLoggedIn({
 
 IsUserLoggedIn.propTypes = {
   user: PropTypes.object,
-  loggedInPath: PropTypes.string.isRequired,
+  redirectPath: PropTypes.string.isRequired,
   children: PropTypes.object.isRequired,
 };

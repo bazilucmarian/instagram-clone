@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import HeaderPost from './HeaderPost';
 import PostImage from './PostImage';
 import PostActions from './PostActions';
-import PostFooter from './PostFooter';
+import PostDescription from './PostDescription';
 import PostComments from './PostComments';
 
 const Post = ({ content }) => {
@@ -20,7 +20,7 @@ const Post = ({ content }) => {
         likedPhoto={content.userLikedPhoto}
         handleFocus={handleFocus}
       />
-      <PostFooter caption={content.caption} username={content.username} />
+      <PostDescription caption={content.caption} username={content.username} />
       <PostComments
         docId={content.docId}
         comments={content.comments}

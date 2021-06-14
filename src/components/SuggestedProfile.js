@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import {
   updateLoggedInUserFollowing,
   updateFollowedUserFollowers,
+  getUserByUserId,
 } from '../services/firebase';
+import LoggedInUserContext from '../context/logged-in-user';
 
 const SuggestedProfile = ({
   profileDocId,
@@ -14,14 +16,18 @@ const SuggestedProfile = ({
   loggedInUserDocId,
 }) => {
   const [followed, setFollowed] = useState(false);
+  const { setActiveUser } = useContext(LoggedInUserContext);
 
   const handleFollowUser = async () => {
     setFollowed(true);
     // create 2 firebase functions
-    await updateLoggedInUserFollowing(loggedInUserDocId, profileId, false);
     // update the following array in the logged in user (in this case, my profile)
-    await updateFollowedUserFollowers(profileDocId, userId, false);
+    await updateLoggedInUserFollowing(loggedInUserDocId, profileId, false);
     // update the followers array of the user who has been followed
+    await updateFollowedUserFollowers(profileDocId, userId, false);
+
+    const [user] = await getUserByUserId(userId);
+    setActiveUser(user);
   };
 
   return !followed ? (
@@ -32,7 +38,7 @@ const SuggestedProfile = ({
           src={`/images/avatars/${username}.jpg`}
           alt=""
         />
-        <Link to={`/p/${username}`}>
+        <Link to={`/profile/${username}`}>
           <p className="font-bold text-sm">{username}</p>
         </Link>
       </div>

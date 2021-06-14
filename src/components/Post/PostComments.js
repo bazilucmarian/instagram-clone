@@ -11,22 +11,42 @@ const PostComments = ({
   commentInput,
 }) => {
   const [comments, setComments] = useState(allComments);
+  const [commentsSlice, setCommentsSlice] = useState(3);
+
+  const showNextComments = () => {
+    setCommentsSlice(commentsSlice + 3);
+  };
+
   return (
     <>
       <div className="p-4 pt-1 pb-4">
-        {comments.length >= 3 && (
+        {/* {comments.length >= 3 && (
           <p className="text-sm text-gray-base mb-1 cursor-pointer">
             View all {comments.length} comments
           </p>
-        )}
-        {comments.slice(0, 3).map((item) => (
+        )} */}
+        {comments.slice(0, commentsSlice).map((item) => (
           <p key={`${item.comment}- ${item.displayName}`} className="mb-1">
-            <Link to={`/p/${item.displayName}`}>
+            <Link to={`/profile/${item.displayName}`}>
               <span className="mr-1 font-bold">{item.displayName}</span>
             </Link>
             <span>{item.comment}</span>
           </p>
         ))}
+        {comments.length >= 3 && commentsSlice < comments.length && (
+          <button
+            type="button"
+            onClick={showNextComments}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                showNextComments();
+              }
+            }}
+            className="text-sm text-gray-base mb-3 cursor-pointer focus:outline-none"
+          >
+            View more comments
+          </button>
+        )}
         <p className="text-gray-base uppercase text-xs">
           {formatDistance(posted, new Date())} ago
         </p>

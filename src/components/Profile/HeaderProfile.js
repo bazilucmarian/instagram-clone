@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
+import { DEFAULT_IMAGE_PATH } from '../../constants/paths';
 import Skeleton from 'react-loading-skeleton';
 import { useUserData } from '../../hooks/useUserData';
 import { isUserFollowingProfile, toggleFollow } from '../../services/firebase';
+import UserContext from '../../context/userContext';
 
 const HeaderProfile = ({
   photosCount,
@@ -11,30 +13,32 @@ const HeaderProfile = ({
   profile: {
     docId: profileDocId,
     userId: profileUserId,
-    following = [],
-    followers = [],
+    following,
+    followers,
     username: profileUsername,
     fullName,
   },
 }) => {
-  const { activeUser } = useUserData();
+  const { user: loggedInUser } = useContext(UserContext);
+  const { activeUser: user } = useUserData(loggedInUser?.uid);
+
   const [isFollowingProfile, setIsFollowingProfie] = useState(false);
-  const activeBtnFollow =
-    activeUser.username && activeUser.username !== profileUsername;
+
+  const activeBtnFollow = user?.username && user?.username !== profileUsername;
 
   useEffect(() => {
     const amIFollowingThisProfile = async () => {
       const isFollowing = await isUserFollowingProfile(
-        activeUser.username,
+        user.username,
         profileUserId
       );
       setIsFollowingProfie(!!isFollowing);
     };
 
-    if (activeUser.username && profileUserId) {
+    if (user?.username && profileUserId) {
       amIFollowingThisProfile();
     }
-  }, [activeUser.username, profileUserId]);
+  }, [user.username, profileUserId]);
 
   const handleToggleFollow = async () => {
     setIsFollowingProfie((isFollowingProfile) => !isFollowingProfile);
@@ -43,10 +47,10 @@ const HeaderProfile = ({
     });
     await toggleFollow(
       isFollowingProfile,
-      activeUser.docId,
+      user.docId,
       profileDocId,
       profileUserId,
-      activeUser.userId
+      user.userId
     );
   };
 
@@ -54,11 +58,14 @@ const HeaderProfile = ({
     <Skeleton count={1} width={800} height={200} />
   ) : (
     <div className="grid grid-cols-3 gap-4 justify-between mx-auto max-w-screen-lg">
-      <div className="container flex justify-center">
+      <div className="container flex justify-center items-center">
         <img
           src={`/images/avatars/${profileUsername}.jpg`}
           alt={`${profileUsername} profile pic w-40 flex`}
           className="rounded-full h-40"
+          onError={(e) => {
+            e.target.src = DEFAULT_IMAGE_PATH;
+          }}
         />
       </div>
       <div className="flex items-center justify-center flex-col col-span-2">
@@ -81,7 +88,7 @@ const HeaderProfile = ({
           )}
         </div>
         <div className="container flex mt-4">
-          {followers === undefined || following === undefined ? (
+          {!followers || !following ? (
             <Skeleton count={1} width={677} height={24} />
           ) : (
             <>
